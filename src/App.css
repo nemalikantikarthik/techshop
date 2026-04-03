@@ -1,0 +1,14 @@
+.swiper-pagination-bullet {
+    background: #666 !important;
+    opacity: 1 !important;
+}
+
+
+.swiper-pagination-bullet-active {
+    background: red !important;
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+    color: red !important;
+}
