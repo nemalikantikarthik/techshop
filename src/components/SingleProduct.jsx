@@ -1,6 +1,13 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { Box, Typography, Button, Card, CardMedia } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  Card,
+  CardMedia,
+  Divider,
+} from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
 import { products } from "../utils/products";
 import reviewsData from "../utils/reviewsData";
@@ -8,17 +15,28 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../Redux/cartSlice";
 
 export const SingleProduct = () => {
+  const { id } = useParams();
   const dispatch = useDispatch();
 
-  const handleAdd = () => {
-    dispatch(addToCart(product));
-  };
-
-  const { id } = useParams();
   const product = products.find((p) => p.id === Number(id));
 
-  const [mainImage, setMainImage] = useState(product.images[0]);
+  const [mainImage, setMainImage] = useState(product?.images?.[0] || "");
   const [activeTab, setActiveTab] = useState("specs");
+
+  const handleAdd = () => {
+    if (product) {
+      dispatch(addToCart(product));
+    }
+  };
+
+  if (!product) {
+    return (
+      <Typography sx={{ color: "white", textAlign: "center", pt: 14 }}>
+        Product not found
+      </Typography>
+    );
+  }
+
   return (
     <>
       <Box
@@ -31,14 +49,15 @@ export const SingleProduct = () => {
           minHeight: "100vh",
           paddingTop: 12,
           alignItems: "flex-start",
+          flexWrap: "wrap",
         }}
       >
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
-            gap: 4,
-            marginTop: 2,
+            gap: 2,
+            mt: 2,
           }}
         >
           {product.images.map((img, index) => (
@@ -48,14 +67,19 @@ export const SingleProduct = () => {
               sx={{
                 width: 80,
                 height: 80,
-                border: mainImage === img ? "2px solid #fff" : "1px solid #333",
+                border:
+                  mainImage === img
+                    ? "2px solid #7c3aed"
+                    : "1px solid #333",
                 borderRadius: "8px",
                 cursor: "pointer",
+                background: "#1a1a1a",
               }}
             >
               <CardMedia
                 component="img"
                 image={img}
+                alt={`${product.title}-${index + 1}`}
                 sx={{ height: "100%", objectFit: "contain", p: 1 }}
               />
             </Card>
@@ -65,6 +89,7 @@ export const SingleProduct = () => {
         <Box
           sx={{
             flex: 1,
+            minWidth: 280,
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
@@ -74,16 +99,19 @@ export const SingleProduct = () => {
             src={mainImage}
             alt={product.title}
             style={{
-              width: "450px",
+              width: "100%",
+              maxWidth: "450px",
               height: "450px",
               objectFit: "contain",
               marginTop: "20px",
             }}
           />
         </Box>
+
         <Box
           sx={{
-            width: "40%",
+            width: { xs: "100%", md: "40%" },
+            minWidth: 280,
             display: "flex",
             flexDirection: "column",
             gap: 2,
@@ -93,218 +121,146 @@ export const SingleProduct = () => {
             {product.title}
           </Typography>
 
-          <Typography sx={{ fontSize: "18px", color: "#ccc" }}>
-            {product.info}
+          <Typography sx={{ color: "#c4b5fd" }}>
+            Brand: {product.brand}
           </Typography>
+
+          <Typography sx={{ color: "#c4b5fd" }}>
+            Category: {product.category}
+          </Typography>
+
+          <Typography sx={{ color: "#c4b5fd" }}>
+            Type: {product.type}
+          </Typography>
+
+          <Typography sx={{ color: "#c4b5fd" }}>
+            Connectivity: {product.connectivity}
+          </Typography>
+
+          <Typography sx={{ color: "#ddd" }}>{product.info}</Typography>
+
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            {Array(product.rateCount)
-              .fill()
-              .map((_, i) => (
-                <StarIcon key={i} sx={{ color: "#ff1a1a" }} />
-              ))}
-            <Typography sx={{ color: "#bbb" }}>
-              {product.ratings} Ratings
+            {[...Array(product.rateCount)].map((_, i) => (
+              <StarIcon key={i} sx={{ color: "#facc15" }} />
+            ))}
+            <Typography sx={{ color: "#aaa", fontSize: "14px" }}>
+              ({product.ratings} ratings)
             </Typography>
           </Box>
 
-          <Box sx={{ height: "1px", background: "#333", my: 1 }} />
-
-          <Box>
-            <Typography sx={{ fontSize: "26px", fontWeight: 700 }}>
-              ₹{product.finalPrice.toLocaleString()}
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Typography
+              sx={{
+                fontSize: "28px",
+                fontWeight: 700,
+                color: "#22c55e",
+              }}
+            >
+              ₹{product.finalPrice}
             </Typography>
 
             <Typography
               sx={{
-                fontSize: "20px",
+                fontSize: "18px",
+                color: "#888",
                 textDecoration: "line-through",
-                color: "#777",
               }}
             >
-              ₹{product.originalPrice.toLocaleString()}
+              ₹{product.originalPrice}
             </Typography>
-
-            <Typography sx={{ fontSize: "18px", color: "lightgreen", mt: 1 }}>
-              You save: ₹
-              {(product.originalPrice - product.finalPrice).toLocaleString()} (
-              {Math.round(
-                ((product.originalPrice - product.finalPrice) /
-                  product.originalPrice) *
-                  100
-              )}
-              %)
-            </Typography>
-
-            <Typography sx={{ color: "#999" }}>
-              (Inclusive of all taxes)
-            </Typography>
-          </Box>
-          <Box
-            sx={{
-              background: "green",
-              px: 2,
-              py: 1,
-              color: "#fff",
-              borderRadius: "8px",
-              fontWeight: 600,
-              alignSelf: "flex-start",
-              display: "flex",
-              alignItems: "center",
-              gap: 1,
-            }}
-          >
-            ✔ In Stock
-          </Box>
-
-          <Box sx={{ height: "1px", background: "#333", my: 1 }} />
-          <Typography sx={{ fontSize: "20px", fontWeight: 600 }}>
-            Offers and Discounts
-          </Typography>
-
-          <Box sx={{ display: "flex", gap: 1 }}>
-            <Button
-              variant="outlined"
-              sx={{ borderColor: "#555", color: "#fff" }}
-            >
-              No Cost EMI on Credit Card
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{ borderColor: "#555", color: "#fff" }}
-            >
-              Pay Later & Avail Cashback
-            </Button>
           </Box>
 
           <Button
+            onClick={handleAdd}
             sx={{
-              background: "#ff1a1a",
-              color: "#fff",
-              fontSize: "18px",
-              py: 1.5,
               mt: 1,
-              "&:hover": { background: "#e60000" },
+              background: "#7c3aed",
+              color: "white",
+              py: 1.4,
+              fontSize: "16px",
+              fontWeight: "bold",
+              width: "220px",
+              "&:hover": {
+                background: "#6d28d9",
+              },
             }}
-            onClick={handleAdd()}
           >
-            Add to cart
+            Add to Cart
           </Button>
-        </Box>
-      </Box>
 
-      {/* specifications and reviwes  */}
-      <Box
-        sx={{
-          width: "100%",
-          px: 10,
-          py: 12,
-          background: "#111",
-          color: "#fff",
-        }}
-      >
-        <Box sx={{ display: "flex", gap: 4, justifyContent: "center" }}>
-          {["specs", "overview", "reviews"].map((tab) => (
+          <Divider sx={{ borderColor: "#2a2a2a", my: 2 }} />
+
+          <Box sx={{ display: "flex", gap: 2 }}>
             <Button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
+              onClick={() => setActiveTab("specs")}
               sx={{
-                background: activeTab === tab ? "#ff1a1a" : "transparent",
-                color: activeTab === tab ? "#fff" : "#ccc",
-                px: 4,
-                py: 1,
-                fontSize: "18px",
-                borderRadius: "6px",
-                textTransform: "none",
-                "&:hover": {
-                  background: activeTab === tab ? "#e60000" : "#222",
-                },
+                color: activeTab === "specs" ? "#fff" : "#aaa",
+                borderBottom:
+                  activeTab === "specs"
+                    ? "2px solid #7c3aed"
+                    : "2px solid transparent",
+                borderRadius: 0,
               }}
             >
-              {tab === "specs" && "Specifications"}
-              {tab === "overview" && "Overview"}
-              {tab === "reviews" && "Reviews"}
+              Specifications
             </Button>
-          ))}
-        </Box>
 
-        <Box sx={{ mt: 6 }}>
-          {activeTab === "specs" && (
-            <Box
+            <Button
+              onClick={() => setActiveTab("reviews")}
               sx={{
-                display: "grid",
-                gridTemplateColumns: "250px auto",
-                rowGap: 3,
-                color: "#ccc",
-                fontSize: "18px",
+                color: activeTab === "reviews" ? "#fff" : "#aaa",
+                borderBottom:
+                  activeTab === "reviews"
+                    ? "2px solid #7c3aed"
+                    : "2px solid transparent",
+                borderRadius: 0,
               }}
             >
-              <Typography>Brand</Typography>
-              <Typography>{product.brand}</Typography>
+              Reviews
+            </Button>
+          </Box>
 
-              <Typography>Model</Typography>
-              <Typography>{product.title}</Typography>
-
-              <Typography>Info</Typography>
-              <Typography>{product.info}</Typography>
-
-              <Typography>Headphone Type</Typography>
-              <Typography>{product.type}</Typography>
-
-              <Typography>Connectivity</Typography>
-              <Typography>{product.connectivity}</Typography>
-
-              <Typography>Ratings</Typography>
-              <Typography>{product.ratings}</Typography>
+          {activeTab === "specs" ? (
+            <Box sx={{ mt: 1, color: "#ddd", lineHeight: 2 }}>
+              <Typography>Brand: {product.brand}</Typography>
+              <Typography>Category: {product.category}</Typography>
+              <Typography>Type: {product.type}</Typography>
+              <Typography>Connectivity: {product.connectivity}</Typography>
+              <Typography>Rating: {product.rateCount} stars</Typography>
             </Box>
-          )}
-
-          {activeTab === "overview" && (
-            <Typography sx={{ color: "#ccc", fontSize: "18px" }}>
-              The <span style={{ color: "red" }}>{product.title} </span>
-              provides you with fabulous sound quality. Sound Tuned to
-              Perfection Comfortable to Wear Long Hours Playback Time Enjoy
-              perfect flexibility and mobility with amazing musical quality.
-              Experience exceptional sound performance and smart features
-              combined for an unrivalled listening experience.
-            </Typography>
-          )}
-
-          {activeTab === "reviews" && (
-            <Typography sx={{ color: "#ccc", fontSize: "18px" }}>
-              {reviewsData.map((review) => (
+          ) : (
+            <Box sx={{ mt: 1 }}>
+              {reviewsData.map((item) => (
                 <Box
-                  key={review.id}
+                  key={item.id}
                   sx={{
-                    background: "#3e3d3dff",
-                    padding: 2,
-                    margin: 2,
+                    mb: 2,
+                    p: 2,
+                    border: "1px solid #2a2a2a",
+                    borderRadius: 2,
+                    background: "#171717",
                   }}
                 >
-                  <Typography sx={{ fontSize: "18px", fontWeight: 600 }}>
-                    {review.name}
+                  <Typography sx={{ fontWeight: 700 }}>
+                    {item.name}
                   </Typography>
 
-                  <Typography sx={{ color: "#888", fontSize: "14px" }}>
-                    {review.date}
+                  <Typography sx={{ color: "#999", fontSize: "13px", mb: 1 }}>
+                    {item.date}
                   </Typography>
 
-                  <Box sx={{ display: "flex", gap: 0.5, mt: 1 }}>
-                    {Array(review.rateCount)
-                      .fill()
-                      .map((_, i) => (
-                        <StarIcon
-                          key={i}
-                          sx={{ color: "#ff1a1a", fontSize: 20 }}
-                        />
-                      ))}
+                  <Box sx={{ display: "flex", mb: 1 }}>
+                    {[...Array(item.rateCount)].map((_, i) => (
+                      <StarIcon key={i} sx={{ color: "#facc15", fontSize: 18 }} />
+                    ))}
                   </Box>
 
-                  <Typography sx={{ mt: 1, fontSize: "16px", color: "#ddd" }}>
-                    {review.review}
+                  <Typography sx={{ color: "#ddd" }}>
+                    {item.review}
                   </Typography>
                 </Box>
               ))}
-            </Typography>
+            </Box>
           )}
         </Box>
       </Box>

@@ -1,9 +1,9 @@
-import { Button, CssBaseline } from "@mui/material";
+import { CssBaseline } from "@mui/material";
 import "./App.css";
 import { Header } from "./components/Header";
 import { MainScrolling } from "./components/MainScrolling";
 import { FeatureProducts } from "./components/FeatureProducts";
-import TopProducts from "./components/TopPRoducts";
+import TopProducts from "./components/TopProducts";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Advantages } from "./components/Advantages";
 import Footer from "./components/Footer";

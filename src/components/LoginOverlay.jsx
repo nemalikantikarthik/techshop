@@ -10,8 +10,10 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 export default function LoginOverlay({ open, onClose }) {
+  if (!open) return null;
+
   return (
-    <Fade in={open}>
+    <Fade in={open} timeout={250}>
       <Box
         sx={{
           position: "fixed",
@@ -19,22 +21,26 @@ export default function LoginOverlay({ open, onClose }) {
           left: 0,
           width: "100vw",
           height: "100vh",
-          bgcolor: "rgba(0,0,0,0.85)",
-          backdropFilter: "blur(2px)",
+          bgcolor: "rgba(0,0,0,0.78)",
+          backdropFilter: "blur(4px)",
           zIndex: 3000,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           p: 2,
         }}
+        onClick={onClose}
       >
         <Box
+          onClick={(e) => e.stopPropagation()}
           sx={{
             width: 420,
-            bgcolor: "#1c1c1c",
+            bgcolor: "#171726",
             p: 4,
-            borderRadius: "6px",
+            borderRadius: "14px",
             position: "relative",
+            border: "1px solid rgba(124,58,237,0.35)",
+            boxShadow: "0 18px 50px rgba(0,0,0,0.45)",
           }}
         >
           <IconButton
@@ -43,8 +49,8 @@ export default function LoginOverlay({ open, onClose }) {
               position: "absolute",
               top: 10,
               right: 10,
-              color: "#ccc",
-              "&:hover": { color: "#fff" },
+              color: "#ddd6fe",
+              "&:hover": { color: "#ffffff" },
             }}
           >
             <CloseIcon />
@@ -57,9 +63,15 @@ export default function LoginOverlay({ open, onClose }) {
             Login
           </Typography>
 
-          <Typography sx={{ color: "#aaa", mb: 3 }}>
-            New to Tech-Shop ?{" "}
-            <span style={{ color: "#fff", cursor: "pointer" }}>
+          <Typography sx={{ color: "#c4b5fd", mb: 3 }}>
+            New to Tech-Shop?{" "}
+            <span
+              style={{
+                color: "#22c55e",
+                cursor: "pointer",
+                fontWeight: 600,
+              }}
+            >
               Create an account
             </span>
           </Typography>
@@ -70,12 +82,12 @@ export default function LoginOverlay({ open, onClose }) {
             variant="outlined"
             sx={{
               mb: 2,
-              "& .MuiOutlinedInput-root": {
-                color: "#fff",
-                "& fieldset": { borderColor: "#666" },
-                "&:hover fieldset": { borderColor: "#aaa" },
-              },
               input: { color: "#fff" },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": { borderColor: "#6d28d9" },
+                "&:hover fieldset": { borderColor: "#8b5cf6" },
+                "&.Mui-focused fieldset": { borderColor: "#22c55e" },
+              },
             }}
           />
 
@@ -86,32 +98,41 @@ export default function LoginOverlay({ open, onClose }) {
             variant="outlined"
             sx={{
               mb: 3,
-              "& .MuiOutlinedInput-root": {
-                color: "#fff",
-                "& fieldset": { borderColor: "#666" },
-                "&:hover fieldset": { borderColor: "#aaa" },
-              },
               input: { color: "#fff" },
+              "& .MuiOutlinedInput-root": {
+                "& fieldset": { borderColor: "#6d28d9" },
+                "&:hover fieldset": { borderColor: "#8b5cf6" },
+                "&.Mui-focused fieldset": { borderColor: "#22c55e" },
+              },
             }}
           />
 
           <Button
             fullWidth
             sx={{
-              background: "red",
+              background: "#7c3aed",
               color: "white",
               py: 1.2,
               fontSize: "16px",
               fontWeight: "bold",
-              "&:hover": { background: "#d40000" },
+              "&:hover": { background: "#6d28d9" },
             }}
           >
             Login
           </Button>
 
-          <Box sx={{ display: "flex", alignItems: "center", mt: 3, mb: 3 }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mt: 3,
+              mb: 3,
+            }}
+          >
             <Divider sx={{ flex: 1, borderColor: "#444" }} />
-            <Typography sx={{ color: "#bbb", mx: 2 }}>or login with</Typography>
+            <Typography sx={{ color: "#bbb", mx: 2 }}>
+              or login with
+            </Typography>
             <Divider sx={{ flex: 1, borderColor: "#444" }} />
           </Box>
 
