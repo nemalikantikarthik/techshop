@@ -10,10 +10,13 @@ import StarIcon from "@mui/icons-material/Star";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../Redux/cartSlice";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [added, setAdded] = useState(false);
+
   const handleAdd = () => {
     dispatch(addToCart(product));
     setAdded(true);
@@ -31,7 +34,7 @@ const ProductCard = ({ product }) => {
         overflow: "hidden",
         cursor: "pointer",
       }}
-      onClick={() => (window.location.href = `/product/${product.id}`)}
+      onClick={() => navigate(`/product/${product.id}`)}
     >
       <CardMedia
         component="img"
@@ -75,6 +78,7 @@ const ProductCard = ({ product }) => {
             ₹{product.originalPrice}
           </Typography>
         </Box>
+
         <Button
           fullWidth
           onClick={(e) => {

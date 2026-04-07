@@ -7,8 +7,11 @@ import { Box, Button, Typography } from "@mui/material";
 import buds from "../assets/buds.png";
 import earphones from "../assets/earphones.png";
 import headset from "../assets/headset.png";
+import { useNavigate } from "react-router-dom";
 
 export const MainScrolling = () => {
+  const navigate = useNavigate();
+
   const products = [
     {
       id: 1,
@@ -120,7 +123,7 @@ export const MainScrolling = () => {
                 </Box>
 
                 <Button
-                  onClick={() => (window.location.href = `/product/${p.id}`)}
+                  onClick={() => navigate(`/product/${p.id}`)}
                   sx={{
                     background: "red",
                     color: "white",

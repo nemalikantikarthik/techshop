@@ -3,12 +3,15 @@ import { products } from "../utils/products";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import { Navigation } from "swiper/modules";
+import { useNavigate } from "react-router-dom";
 
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 export const FeatureProducts = () => {
+  const navigate = useNavigate();
+
   return (
     <Box sx={{ py: 6, background: "#111", color: "#ddd" }}>
       <Typography
@@ -30,7 +33,7 @@ export const FeatureProducts = () => {
           <SwiperSlide key={item.id}>
             <Box
               sx={{ textAlign: "center", px: 2, cursor: "pointer" }}
-              onClick={() => (window.location.href = `/product/${item.id}`)}
+              onClick={() => navigate(`/product/${item.id}`)}
             >
               <Typography sx={{ mt: 2, fontSize: "1.1rem" }}>
                 {item.title}
@@ -58,7 +61,7 @@ export const FeatureProducts = () => {
                     fontSize: "1rem",
                   }}
                 >
-                  ₹{item.oldPrice}
+                  ₹{item.originalPrice}
                 </Typography>
               </Box>
             </Box>
